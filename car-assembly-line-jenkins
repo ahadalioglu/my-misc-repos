@@ -31,7 +31,8 @@ pipeline{
                 sh 'test -s build/car.txt'
                 sh 'touch $(grep "chasis" build/car.txt).txt'
                 sh 'touch $(grep "engine" build/car.txt).txt'
-                sh 'touch $(grep "wheels" build/car.txt).txt'            
+                sh 'touch $(grep "wheels" build/car.txt).txt'    
+		sh 'ls -la'
             }
         }
         stage('CleanUp'){
