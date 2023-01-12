@@ -32,7 +32,7 @@ pipeline{
                 sh 'touch $(grep "chasis" build/car.txt).txt'
                 sh 'touch $(grep "engine" build/car.txt).txt'
                 sh 'touch $(grep "wheels" build/car.txt).txt'    
-		sh 'ls -la'
+		sh 'ls -l -a'
             }
         }
         stage('CleanUp'){
