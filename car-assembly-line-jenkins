@@ -1,0 +1,47 @@
+pipeline{
+    agent any
+    
+    stages{
+        stage('Build'){
+            steps{
+                sh 'test -d build || mkdir build'
+				dir ('build'){
+				    sh '''
+        				touch car.txt
+        				echo "chasis" > car.txt
+        				echo "engine" >> car.txt
+        				echo "wheels" >> car.txt
+    				'''
+                }
+                stash includes: "**/", name:"mydir"
+            }
+        }
+        stage('Test'){
+            steps{
+                unstash "mydir"
+                sh 'test -s build/car.txt'
+                sh 'grep "chasis" build/car.txt'
+                sh 'grep "engine" build/car.txt'
+                sh 'grep "wheels" build/car.txt'
+            }
+        }
+        stage('Deploy'){
+            steps{
+                unstash "mydir"
+                sh 'test -s build/car.txt'
+                sh 'touch $(grep "chasis" build/car.txt).txt'
+                sh 'touch $(grep "engine" build/car.txt).txt'
+                sh 'touch $(grep "wheels" build/car.txt).txt'            
+            }
+        }
+        stage('CleanUp'){
+            steps{
+                //timeout(time: 1, unit: "MINUTES"){
+                input message:'Di hi mi?', ok: 'He qadam'
+                //}
+                sh 'rm -rf build* *.txt'
+                sh 'ls -l'
+            }
+        }
+    }
+}
