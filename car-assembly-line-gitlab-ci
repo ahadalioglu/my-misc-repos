@@ -1,0 +1,41 @@
+stages:
+    - build
+    - test
+    - deploy
+
+build the car:
+    stage: build
+    script:
+        - mkdir build
+        - cd build
+        - touch car.txt
+        - echo "chassis" > car.txt
+        - echo "engine" >> car.txt
+        - echo "wheels" >> car.txt
+    cache:
+        paths:
+            - build/
+    artifacts:
+        paths:
+            - build/
+
+test the car:
+    stage: test
+    script:
+        - ls
+        - test -f build/car.txt
+        - cd build
+        - cat car.txt
+        - grep "chassis" car.txt
+        - grep "engine" car.txt
+        - grep "wheels" car.txt
+
+deploy the car:
+    stage: deploy
+    script:
+        - test -f build/car.txt
+        - cd build
+        - touch $(grep "chassis" car.txt)
+        - touch $(grep "engine" car.txt)
+        - touch $(grep "wheels" car.txt)
+        - ls -l
